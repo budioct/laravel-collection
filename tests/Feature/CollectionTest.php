@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use function PHPUnit\Framework\assertEqualsCanonicalizing;
 
 class CollectionTest extends TestCase
 {
@@ -14,9 +15,10 @@ class CollectionTest extends TestCase
      *   digunakan untuk mengubah tipe data array menjadi Collection
      */
 
-    public function testCreateCollection(){
+    public function testCreateCollection()
+    {
 
-        $data = array(1,2,3,4,5);
+        $data = array(1, 2, 3, 4, 5);
 
         // collect(array) adalah method global di laravel dia yang manage collection kumpulan data manipulasi
         $collection = collect($data); // collect(array) // konversi array ke collection
@@ -27,7 +29,8 @@ class CollectionTest extends TestCase
 
     }
 
-    public function testForEachCollection(){
+    public function testForEachCollection()
+    {
 
         /**
          * For Each
@@ -35,13 +38,13 @@ class CollectionTest extends TestCase
          * ● Dengan demikian, kita bisa melakukan iterasi data Collection menggunakan perintah for PHP
          */
 
-        $data = array(1,2,3,4,5,6,7,8,9,10);
+        $data = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 
         $collection = collect($data);
 
-        foreach ($collection as $index => $value){
+        foreach ($collection as $index => $value) {
             $this->assertEquals($index + 1, $value);
-            var_dump($index + 1 ." equals ". $value);
+            var_dump($index + 1 . " equals " . $value);
         }
 
         /**
@@ -58,5 +61,46 @@ class CollectionTest extends TestCase
          * string(4) "9 10"
          */
 
+    }
+
+    public function testManipulasiCollection()
+    {
+
+        /**
+         * Manipulasi Collection
+         * ● Collection adalah sebuah class, oleh karena itu untuk memanipulasi data nya, kita perlu
+         *   menggunakan method yang terdapat di Collection
+         *
+         * Collection Operations
+         * Method               Keterangan
+         * push(data)           Menambah data ke paling belakang
+         * pop()                Menghapus dan mengambil data paling terakhir
+         * prepend(data)        Menambah data ke paling depan
+         * pull(key)            Menghapus dan mengambil data sesuai dengan key
+         * put(key, data)       Mengubah data dengan key
+         */
+
+        $collection = collect([]);
+
+        $collection->push("budhi", "jamal", "malik"); // push(data) Menambah data ke paling belakang
+        $this->assertEqualsCanonicalizing(["budhi", "jamal", "malik"], $collection->all());
+        var_dump($collection);
+
+        $hapus_data = $collection->pop(); // pop() Menghapus dan mengambil data paling terakhir
+        $this->assertEquals("malik", $hapus_data);
+        $this->assertEqualsCanonicalizing(["budhi", "jamal"], $collection->all());
+        var_dump($collection);
+
+        $collection->prepend("dimas"); // prepend(data) Menambah data ke paling depan
+        $this->assertEqualsCanonicalizing(["dimas", "budhi", "jamal"], $collection->all());
+        var_dump($collection);
+
+        $collection->pull("dimas"); // pull(key) Menghapus dan mengambil data sesuai dengan key
+        $this->assertEqualsCanonicalizing(["dimas", "budhi", "jamal"], $collection->all());
+        var_dump($collection);
+
+        $collection->put("dimas", "asek asek jos"); // put(key, data) Mengubah data dengan key
+        $this->assertEqualsCanonicalizing(["asek asek jos", "dimas", "budhi", "jamal"], $collection->all());
+        var_dump($collection);
     }
 }
