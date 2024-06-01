@@ -26,4 +26,37 @@ class CollectionTest extends TestCase
         var_dump(json_encode($collection)); // string(11) "[1,2,3,4,5]"
 
     }
+
+    public function testForEachCollection(){
+
+        /**
+         * For Each
+         * ● Collection adalah struktur data turunan dari Iterable PHP
+         * ● Dengan demikian, kita bisa melakukan iterasi data Collection menggunakan perintah for PHP
+         */
+
+        $data = array(1,2,3,4,5,6,7,8,9,10);
+
+        $collection = collect($data);
+
+        foreach ($collection as $index => $value){
+            $this->assertEquals($index + 1, $value);
+            var_dump($index + 1 ." equals ". $value);
+        }
+
+        /**
+         * result:
+         * string(3) "0 1"
+         * string(3) "1 2"
+         * string(3) "2 3"
+         * string(3) "3 4"
+         * string(3) "4 5"
+         * string(3) "5 6"
+         * string(3) "6 7"
+         * string(3) "7 8"
+         * string(3) "8 9"
+         * string(4) "9 10"
+         */
+
+    }
 }
